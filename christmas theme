@@ -2,7 +2,7 @@
 // @name         Christmas Theme by DST
 // @namespace    little bit help with claude :P
 // @version      V6
-// @description  Christmas theme for Shell Shockers, with the SFC and skin hack anti-cheat built in
+// @description  Christmas theme for Shell Shockers
 // @author       DST
 // @license      DST
 // @icon         data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20x='2'%20y='2'%20width='60'%20height='60'%20rx='14'%20fill='%230b3d20'%20stroke='%23e03a3e'%20stroke-width='3'/%3E%3Cpath%20d='M32%2010L16%2030h8L14%2044h14v8h8v-8h14L40%2030h8z'%20fill='%231f9a4f'%20stroke='%23ffd86b'%20stroke-width='2'%20stroke-linejoin='round'/%3E%3C/svg%3E
@@ -307,6 +307,36 @@
     [class*="egg-coin" i], [class*="eggcoin" i], [class*="golden-egg" i] {
       background: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='11%203%2046%2064'%3E%3Cpath%20d='M22%2058V26a12%2012%200%200%201%2024%200v4'%20fill='none'%20stroke='%23000'%20stroke-width='15'%20stroke-linecap='round'%20stroke-linejoin='round'/%3E%3Cpath%20d='M22%2058V26a12%2012%200%200%201%2024%200v4'%20fill='none'%20stroke='%23fff'%20stroke-width='11'%20stroke-linecap='round'%20stroke-linejoin='round'/%3E%3Cpath%20d='M22%2056V26a12%2012%200%200%201%2024%200v3'%20fill='none'%20stroke='%23d42a3c'%20stroke-width='11'%20stroke-dasharray='5%208'%20stroke-dashoffset='-2'/%3E%3C/svg%3E") center / contain no-repeat !important;
     }
+    .egg_count {
+    width: auto;
+    font-size: 2em;
+    font-weight: 700;
+    color: #00ff51;
+}
+.ss_bigtab {
+    color: #09b441;
+    border-color: #09b441;
+    background: #dad240;
+    box-shadow
+Attaches one or more drop-shadows to the box. The property is a comma-separated list of shadows, each specified by 2-4 length values, an optional color, and an optional 'inset' keyword. Omitted lengths are 0; omitted colors are a user agent chosen color.
+
+Widely available across major browsers (Baseline since January 2018)
+Learn more
+
+Don’t show
+: var(--ss-box-shadow-1) !important;
+}
+.btn_toggleoff {
+    color: #000000 !important;
+    text-shadow
+Enables shadow effects to be applied to the text of the element.
+
+Widely available across major browsers (Baseline since January 2018)
+Learn more
+
+Don’t show
+: none !important;
+}
 
     /* Black outline around the candy cane and the egg count next to it. */
     img[src*="goldenegg" i], img[src*="eggcoin" i], img[src*="egg_coin" i],
@@ -500,7 +530,7 @@
 })();
 
 /* =====================================================================
-   Anti-Cheat (SFC / StateFarm Client detector), merged into the theme.
+                               NULL
    ===================================================================== */
 (() => {
   "use strict";
@@ -551,7 +581,7 @@
     return true;
   }
 
-  // ---------- 1. Is SFC running on this page? ----------
+
   function findEvidence() {
     let score = 0;
     const reasons = [];
@@ -586,9 +616,7 @@
     return { score, reasons };
   }
 
-  // ---------- 1b. Is a skin hack / skin unlocker running on this page? ----------
-  // Strong signs lock the screen. Weak signs (patched network functions) only show a warning,
-  // because ad blockers and other userscripts can patch those too.
+ 
   const SKIN_TOKENS = ["skinhack", "skin-hack", "skin_hack", "skinchanger", "skin-changer", "skin_changer", "skinunlock", "skin-unlock", "skin_unlock", "unlockskins", "unlock-skins", "unlock_skins"];
   const SKIN_SELECTOR = SKIN_TOKENS.map((t) => `[id*="${t}" i],[class*="${t}" i]`).join(",");
   const SKIN_GLOBALS = ["skinHack", "skinHacks", "SkinHack", "skinChanger", "SkinChanger", "skinUnlocker", "SkinUnlocker", "skinUnlock", "unlockSkins", "unlockAllSkins"];
