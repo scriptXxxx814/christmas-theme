@@ -1,68 +1,88 @@
 // ==UserScript==
 // @name         Christmas Theme by DST
 // @namespace    little bit help with claude :P
-// @version      V4
-// @description  Christmas theme for Shell Shockers
+// @version      V6
+// @description  Christmas theme for Shell Shockers, with the SFC and skin hack anti-cheat built in
 // @author       DST
 // @license      DST
 // @icon         data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20x='2'%20y='2'%20width='60'%20height='60'%20rx='14'%20fill='%230b3d20'%20stroke='%23e03a3e'%20stroke-width='3'/%3E%3Cpath%20d='M32%2010L16%2030h8L14%2044h14v8h8v-8h14L40%2030h8z'%20fill='%231f9a4f'%20stroke='%23ffd86b'%20stroke-width='2'%20stroke-linejoin='round'/%3E%3C/svg%3E
-// @match        https://shellshock.io/*
-// @match        https://www.shellshock.io/*
-// @match        https://new.shellshock.io/*
-// @match        https://shellgame.me/*
-// @match        https://www.shellgame.me/*
-// @match        https://algebra.best/*
-// @match        https://algebra.vip/*
-// @match        https://biologyclass.club/*
-// @match        https://deadlyegg.com/*
-// @match        https://deathegg.world/*
-// @match        https://egg.dance/*
-// @match        https://eggboy.club/*
-// @match        https://eggboy.xyz/*
-// @match        https://eggcombat.com/*
-// @match        https://eggfacts.fun/*
-// @match        https://egghead.institute/*
-// @match        https://eggisthenewblack.com/*
-// @match        https://eggsarecool.com/*
-// @match        https://eggshooter.best/*
-// @match        https://geometry.best/*
-// @match        https://geometry.monster/*
-// @match        https://geometry.pw/*
-// @match        https://geometry.report/*
-// @match        https://hardboiled.life/*
-// @match        https://hardshell.life/*
-// @match        https://humanorganising.org/*
-// @match        https://mathactivity.xyz/*
-// @match        https://mathdrills.info/*
-// @match        https://mathdrills.life/*
-// @match        https://mathfun.rocks/*
-// @match        https://mathgames.world/*
-// @match        https://math.international/*
-// @match        https://mathlete.fun/*
-// @match        https://mathlete.pro/*
-// @match        https://overeasy.club/*
-// @match        https://scrambled.best/*
-// @match        https://scrambled.tech/*
-// @match        https://scrambled.today/*
-// @match        https://scrambled.us/*
-// @match        https://scrambled.world/*
-// @match        https://shellsocks.com/*
-// @match        https://shellshockers.club/*
-// @match        https://shellshockers.site/*
-// @match        https://shellshockers.us/*
-// @match        https://shellshockers.world/*
-// @match        https://shellshockers.xyz/*
-// @match        https://softboiled.club/*
-// @match        https://urbanegger.com/*
-// @match        https://violentegg.club/*
-// @match        https://violentegg.fun/*
-// @match        https://yolk.best/*
-// @match        https://yolk.life/*
-// @match        https://yolk.quest/*
-// @match        https://yolk.rocks/*
-// @match        https://yolk.tech/*
-// @match        https://yolk.today/*
-// @match        https://zygote.cafe/*
+// @match        *://*.shellshock.io/*
+// @match        *://*.algebra.best/*
+// @match        *://*.algebra.monster/*
+// @match        *://*.algebra.vip/*
+// @match        *://*.biologyclass.club/*
+// @match        *://*.combateggs.com/*
+// @match        *://*.deadlyegg.com/*
+// @match        *://*.deathegg.life/*
+// @match        *://*.deathegg.world/*
+// @match        *://*.eggbattle.com/*
+// @match        *://*.eggboy.club/*
+// @match        *://*.eggboy.me/*
+// @match        *://*.eggboy.xyz/*
+// @match        *://*.eggcombat.com/*
+// @match        *://*.egg.dance/*
+// @match        *://*.eggfacts.fun/*
+// @match        *://*.egggames.best/*
+// @match        *://*.egghead.institute/*
+// @match        *://*.eggisthenewblack.com/*
+// @match        *://*.eggsarecool.com/*
+// @match        *://*.eggshock.com/*
+// @match        *://*.eggshock.me/*
+// @match        *://*.eggshock.net/*
+// @match        *://*.eggshooter.best/*
+// @match        *://*.eggshooter.com/*
+// @match        *://*.eggwarfare.com/*
+// @match        *://*.eggwars.io/*
+// @match        *://*.geometry.best/*
+// @match        *://*.geometry.monster/*
+// @match        *://*.geometry.pw/*
+// @match        *://*.geometry.report/*
+// @match        *://*.hardboiled.life/*
+// @match        *://*.hardshell.life/*
+// @match        *://*.humanorganising.org/*
+// @match        *://*.mathactivity.club/*
+// @match        *://*.mathactivity.xyz/*
+// @match        *://*.mathdrills.info/*
+// @match        *://*.mathdrills.life/*
+// @match        *://*.mathfun.rocks/*
+// @match        *://*.mathgames.world/*
+// @match        *://*.math.international/*
+// @match        *://*.mathlete.fun/*
+// @match        *://*.mathlete.pro/*
+// @match        *://*.overeasy.club/*
+// @match        *://*.risenegg.com/*
+// @match        *://*.scrambled.best/*
+// @match        *://*.scrambled.tech/*
+// @match        *://*.scrambled.today/*
+// @match        *://*.scrambled.us/*
+// @match        *://*.scrambled.world/*
+// @match        *://*.shellgame.me/*
+// @match        *://*.shellplay.live/*
+// @match        *://*.shellshockers.best/*
+// @match        *://*.shellshockers.ca/*
+// @match        *://*.shellshockers.club/*
+// @match        *://*.shellshockers.life/*
+// @match        *://*.shellshockers.site/*
+// @match        *://*.shellshockers.today/*
+// @match        *://*.shellshockers.us/*
+// @match        *://*.shellshockers.website/*
+// @match        *://*.shellshockers.wiki/*
+// @match        *://*.shellshockers.world/*
+// @match        *://*.shellshockers.xyz/*
+// @match        *://*.shellshock.guru/*
+// @match        *://*.shellsocks.com/*
+// @match        *://*.softboiled.club/*
+// @match        *://*.urbanegger.com/*
+// @match        *://*.violentegg.club/*
+// @match        *://*.violentegg.fun/*
+// @match        *://*.yolk.best/*
+// @match        *://*.yolk.life/*
+// @match        *://*.yolk.monster/*
+// @match        *://*.yolk.rocks/*
+// @match        *://*.yolk.tech/*
+// @match        *://*.yolk.quest/*
+// @match        *://*.yolk.today/*
+// @match        *://*.zygote.cafe/*
 // @run-at       document-start
 // @grant        none
 // ==/UserScript==
@@ -477,4 +497,252 @@
     const o = new MutationObserver(() => { if (watchTitle()) o.disconnect(); });
     o.observe(document, { childList: true, subtree: true });
   }
+})();
+
+/* =====================================================================
+   Anti-Cheat (SFC / StateFarm Client detector), merged into the theme.
+   ===================================================================== */
+(() => {
+  "use strict";
+
+  // ---------- Settings ----------
+  const LOCK_TITLE = " You are banned for using the SFC script";
+  const LOCK_TEXT = "StateFarm Client (SFC) was detected. Turn off your hacks, remove the script and reload the page.";
+  const PERSIST_LOCK = false;        // true = stay locked even after a reload (remembered in this browser)
+  const SCAN_OTHER_PLAYERS = true;   // also flag chat messages / player names that look like SFC
+  const CHECK_EVERY_MS = 2000;       // how often to re-scan
+  const THRESHOLD = 3;               // evidence score needed to warn (strong signs are worth 3)
+  const BANNER_ID = "anticheat-warning-banner";
+
+  // Skin hack detection
+  const SKIN_HACK_CHECK = true;      // turn the skin hack detector on/off
+  const SKIN_THRESHOLD = 3;          // strong evidence needed to lock the screen
+  const SKIN_LOCK_TITLE = " You are banned for using skin hacks";
+  const SKIN_LOCK_TEXT = "A skin hack / skin unlocker was detected. Turn off your hacks, remove the script and reload the page.";
+
+  const norm = (s) => String(s || "").normalize("NFKD").replace(/[\u0405\u0455]/g, "s"); // SFC uses a Cyrillic "Ѕ"
+  const isNative = (f) => {
+    try { return typeof f === "function" && /\[native code\]/.test(Function.prototype.toString.call(f)); }
+    catch (e) { return true; }
+  };
+
+  // ---------- Banner ----------
+  let box = null;
+  function getBox() {
+    if (box && box.isConnected) return box;
+    if (!document.body) return null;
+    box = document.createElement("div");
+    box.id = BANNER_ID;
+    box.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:2147483647;display:flex;flex-direction:column;gap:4px;pointer-events:none";
+    document.body.appendChild(box);
+    return box;
+  }
+  function warn(text, color, autoHideMs) {
+    const host = getBox();
+    if (!host) return false;
+    while (host.children.length >= 4) host.firstChild.remove();
+    const row = document.createElement("div");
+    row.style.cssText = `display:flex;align-items:center;justify-content:center;gap:1em;padding:.7em 1em;background:${color};color:#fff;font:700 17px/1.2 sans-serif;text-align:center;box-shadow:0 .2em .6em rgb(0 0 0 / .5);pointer-events:auto`;
+    const span = document.createElement("span");
+    span.textContent = text;
+    row.append(span);
+    host.appendChild(row);
+    if (autoHideMs) setTimeout(() => row.remove(), autoHideMs);
+    return true;
+  }
+
+  // ---------- 1. Is SFC running on this page? ----------
+  function findEvidence() {
+    let score = 0;
+    const reasons = [];
+    const add = (pts, why) => { score += pts; reasons.push(why); };
+
+    // Strong signs (taken from the SFC source)
+    try { if (document.querySelector(".tp-statefarm")) add(3, "elements with class tp-statefarm"); } catch (e) {}
+    try { if (typeof String.prototype.originalReplace === "function" || typeof String.prototype.originalReplaceAll === "function") add(3, "String.prototype.originalReplace patch"); } catch (e) {}
+    try { if (window.WASMOBJECT) add(3, "window.WASMOBJECT (WebAssembly hook)"); } catch (e) {}
+    try { if (window.globalSS) add(3, "window.globalSS (SFC debug object)"); } catch (e) {}
+    try { if (document.getElementById("sfChat-iframe") || document.querySelector('iframe[src*="StateFarmClient" i]')) add(3, "SFC chat iframe"); } catch (e) {}
+    try { if (document.getElementById("automated-border")) add(3, "SFC bot window border"); } catch (e) {}
+    try { if (/state\s*farm/i.test(norm(document.title))) add(3, "page title mentions StateFarm"); } catch (e) {}
+    try { if (document.querySelector('img[src*="StateFarmClient" i],img[src*="shell-logo-replacement" i],img[src*="sfc.best" i]')) add(3, "SFC logo / badge images"); } catch (e) {}
+
+    // Medium signs (need to add up with something else)
+    try { if (document.querySelector("#minimap.MiniMap") && document.querySelector(".playerDot")) add(2, "SFC minimap elements"); } catch (e) {}
+    try {
+      const scrambled = Object.getOwnPropertyNames(window).filter((k) => {
+        if (!/^[a-z]{10}$/.test(k)) return false;
+        try { return typeof window[k] === "function"; } catch (e) { return false; }
+      });
+      if (scrambled.length >= 5) add(2, `${scrambled.length} random 10-letter global functions`);
+    } catch (e) {}
+    try { if (document.querySelector(".tp-rotv")) add(1, "Tweakpane menu present"); } catch (e) {}
+    try {
+      if (window.WebAssembly && !isNative(WebAssembly.instantiateStreaming)) add(1, "WebAssembly.instantiateStreaming replaced");
+      if (!isNative(EventTarget.prototype.addEventListener)) add(1, "addEventListener replaced");
+      if (!isNative(HTMLElement.prototype.appendChild)) add(1, "appendChild replaced");
+    } catch (e) {}
+
+    return { score, reasons };
+  }
+
+  // ---------- 1b. Is a skin hack / skin unlocker running on this page? ----------
+  // Strong signs lock the screen. Weak signs (patched network functions) only show a warning,
+  // because ad blockers and other userscripts can patch those too.
+  const SKIN_TOKENS = ["skinhack", "skin-hack", "skin_hack", "skinchanger", "skin-changer", "skin_changer", "skinunlock", "skin-unlock", "skin_unlock", "unlockskins", "unlock-skins", "unlock_skins"];
+  const SKIN_SELECTOR = SKIN_TOKENS.map((t) => `[id*="${t}" i],[class*="${t}" i]`).join(",");
+  const SKIN_GLOBALS = ["skinHack", "skinHacks", "SkinHack", "skinChanger", "SkinChanger", "skinUnlocker", "SkinUnlocker", "skinUnlock", "unlockSkins", "unlockAllSkins"];
+  let skinWarned = false;
+
+  function findSkinEvidence() {
+    let score = 0, weak = 0;
+    const reasons = [];
+    const add = (pts, why) => { score += pts; reasons.push(why); };
+
+    try { if (document.querySelector(SKIN_SELECTOR)) add(3, "skin hack elements in the page"); } catch (e) {}
+    try {
+      const g = SKIN_GLOBALS.filter((n) => { try { return typeof window[n] !== "undefined"; } catch (e) { return false; } });
+      if (g.length) add(3, "skin hack globals: " + g.join(", "));
+    } catch (e) {}
+    try { if (/skin\s*(hack|changer|unlock)/i.test(norm(document.title))) add(3, "page title mentions a skin hack"); } catch (e) {}
+
+    // Weak signs: network / JSON functions that skin unlockers replace to fake your inventory
+    try {
+      const patched = [
+        ["fetch", window.fetch],
+        ["XMLHttpRequest.open", XMLHttpRequest.prototype.open],
+        ["XMLHttpRequest.send", XMLHttpRequest.prototype.send],
+        ["JSON.parse", JSON.parse],
+        ["Response.json", Response.prototype.json]
+      ].filter(([, f]) => !isNative(f)).map(([n]) => n);
+      weak = patched.length;
+      if (weak) reasons.push("replaced functions: " + patched.join(", "));
+    } catch (e) {}
+
+    return { score, weak, reasons };
+  }
+
+  // ---------- Lock screen (cannot be closed) ----------
+  const LOCK_ID = "anticheat-lock-screen";
+  const STORE_KEY = "anticheat_sfc_locked";
+  let locked = false;
+
+  function buildLock(title, text) {
+    const o = document.createElement("div");
+    o.id = LOCK_ID;
+    o.style.cssText = "position:fixed;inset:0;z-index:2147483647;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.8em;background:#000;color:#fff;font-family:sans-serif;text-align:center;padding:2em;cursor:not-allowed;user-select:none";
+    const h = document.createElement("div");
+    h.textContent = title || LOCK_TITLE;
+    h.style.cssText = "font:800 clamp(28px,5vw,64px)/1.1 sans-serif;color:#ff3b3b";
+    const p = document.createElement("div");
+    p.textContent = text || LOCK_TEXT;
+    p.style.cssText = "font:600 clamp(16px,2vw,24px)/1.3 sans-serif;color:#ddd;max-width:40em";
+    o.append(h, p);
+    return o;
+  }
+
+  // Stops the game from receiving keys / mouse while locked (reload and dev tools keys still work)
+  const BLOCKED = ["keydown", "keyup", "keypress", "mousedown", "mouseup", "click", "dblclick", "contextmenu", "wheel", "mousemove", "pointerdown", "pointerup", "pointermove", "touchstart", "touchmove", "touchend"];
+  function blockInput(e) {
+    if (e.type === "keydown" || e.type === "keyup") {
+      const k = (e.key || "").toLowerCase();
+      if (k === "f5" || k === "f12" || ((e.ctrlKey || e.metaKey) && k === "r")) return;
+    }
+    e.stopImmediatePropagation();
+    e.preventDefault();
+  }
+
+  function lock(reasons, score, kind) {
+    if (locked) return true;
+    if (!document.body) return false;
+    locked = true;
+    if (reasons) console.warn("[Anti-Cheat] " + (kind === "skin" ? "skin hack" : "SFC") + " detected (score " + score + "):", reasons);
+    try { if (PERSIST_LOCK) localStorage.setItem(STORE_KEY, "1"); } catch (e) {}
+
+    const mount = () => {
+      if (!document.getElementById(LOCK_ID) && document.body) document.body.appendChild(kind === "skin" ? buildLock(SKIN_LOCK_TITLE, SKIN_LOCK_TEXT) : buildLock());
+      document.documentElement.style.overflow = "hidden";
+      try { document.exitPointerLock(); } catch (e) {}
+    };
+    mount();
+    BLOCKED.forEach((t) => window.addEventListener(t, blockInput, { capture: true, passive: false }));
+    setInterval(mount, 250); // puts the screen back if someone deletes it
+    return true;
+  }
+
+  function checkSelf() {
+    if (locked) return;
+    let remembered = false;
+    try { remembered = PERSIST_LOCK && localStorage.getItem(STORE_KEY) === "1"; } catch (e) {}
+    if (remembered) { lock(); return; }
+    const { score, reasons } = findEvidence();
+    if (score >= THRESHOLD) { lock(reasons, score); return; }
+    if (SKIN_HACK_CHECK) {
+      const skin = findSkinEvidence();
+      if (skin.score >= SKIN_THRESHOLD) { lock(skin.reasons, skin.score, "skin"); return; }
+      if (skin.weak >= 2 && !skinWarned && warn(" Some game functions were modified. If you use a skin hack, turn it off.", "#c25b00", 12000)) {
+        skinWarned = true;
+        console.warn("[Anti-Cheat] possible skin hack tampering:", skin.reasons);
+      }
+    }
+  }
+
+  // ---------- 2. Do other players look like they use SFC? ----------
+  const SIGNATURE = /state\s*farm|dsc\.gg\/sfnetwork|\[sfc\]|\bsfc\b/i;
+  const SKIN_SIGNATURE = /skin\s*(hacks?|unlock(?:er)?|changer|spoof(?:er)?)|unlock\s*all\s*(skins|items|knives)|free\s*skins?/i;
+  const doneChat = new WeakSet();
+  const doneSkinChat = new WeakSet();
+  const flagged = new Set();
+  function flag(key, text) {
+    if (flagged.has(key)) return;
+    if (warn(text, "#c25b00", 12000)) flagged.add(key);
+  }
+  function checkOthers() {
+    try {
+      document.querySelectorAll("#chatOut .chat-item").forEach((el) => {
+        if (doneChat.has(el)) return;
+        doneChat.add(el);
+        if (SIGNATURE.test(norm(el.textContent))) {
+          const name = (el.querySelector(".chat-player-name")?.textContent || "A player").trim();
+          flag("chat:" + name, ` ${name} sent an SFC message. Looks like StateFarm Client: use off hacks!`);
+        }
+      });
+      if (SKIN_HACK_CHECK) {
+        document.querySelectorAll("#chatOut .chat-item").forEach((el) => {
+          if (doneSkinChat.has(el)) return;
+          doneSkinChat.add(el);
+          if (SKIN_SIGNATURE.test(norm(el.textContent))) {
+            const name = (el.querySelector(".chat-player-name")?.textContent || "A player").trim();
+            flag("skinchat:" + name, ` ${name} is talking about skin hacks. Skin hacks are cheating: turn them off!`);
+          }
+        });
+        document.querySelectorAll("#playerList .playerSlot--name").forEach((el) => {
+          const name = el.textContent.trim();
+          if (name && SKIN_SIGNATURE.test(norm(name))) {
+            flag("skinname:" + name, ` Player "${name}" has a skin hack style name. Skin hacks are cheating!`);
+          }
+        });
+      }
+      document.querySelectorAll("#playerList .playerSlot--name").forEach((el) => {
+        const name = el.textContent.trim();
+        if (name && SIGNATURE.test(norm(name))) {
+          flag("name:" + name, ` Player "${name}" has an SFC-style name. Looks like StateFarm Client: use off hacks!`);
+        }
+      });
+    } catch (e) {}
+  }
+
+  // ---------- Run ----------
+  const scan = () => { checkSelf(); if (SCAN_OTHER_PLAYERS) checkOthers(); };
+  scan();
+  document.addEventListener("DOMContentLoaded", scan, { once: true });
+  window.addEventListener("load", scan, { once: true });
+  setInterval(scan, CHECK_EVERY_MS);
+
+  let timer = null;
+  const startObserver = () => new MutationObserver(() => {
+    clearTimeout(timer);
+    timer = setTimeout(scan, 300);
+  }).observe(document.documentElement, { childList: true, subtree: true });
+  document.documentElement ? startObserver() : document.addEventListener("DOMContentLoaded", startObserver, { once: true });
 })();
