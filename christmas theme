@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Christmas Theme by DST
 // @namespace    little bit help with claude :P
-// @version      V6
-// @description  Christmas theme for Shell Shockers
+// @version      V8
+// @description  Christmas theme for Shell Shockers, with the SFC and skin hack detector built in
 // @author       DST
 // @license      DST
 // @icon         data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20x='2'%20y='2'%20width='60'%20height='60'%20rx='14'%20fill='%230b3d20'%20stroke='%23e03a3e'%20stroke-width='3'/%3E%3Cpath%20d='M32%2010L16%2030h8L14%2044h14v8h8v-8h14L40%2030h8z'%20fill='%231f9a4f'%20stroke='%23ffd86b'%20stroke-width='2'%20stroke-linejoin='round'/%3E%3C/svg%3E
@@ -307,36 +307,6 @@
     [class*="egg-coin" i], [class*="eggcoin" i], [class*="golden-egg" i] {
       background: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='11%203%2046%2064'%3E%3Cpath%20d='M22%2058V26a12%2012%200%200%201%2024%200v4'%20fill='none'%20stroke='%23000'%20stroke-width='15'%20stroke-linecap='round'%20stroke-linejoin='round'/%3E%3Cpath%20d='M22%2058V26a12%2012%200%200%201%2024%200v4'%20fill='none'%20stroke='%23fff'%20stroke-width='11'%20stroke-linecap='round'%20stroke-linejoin='round'/%3E%3Cpath%20d='M22%2056V26a12%2012%200%200%201%2024%200v3'%20fill='none'%20stroke='%23d42a3c'%20stroke-width='11'%20stroke-dasharray='5%208'%20stroke-dashoffset='-2'/%3E%3C/svg%3E") center / contain no-repeat !important;
     }
-    .egg_count {
-    width: auto;
-    font-size: 2em;
-    font-weight: 700;
-    color: #00ff51;
-}
-.ss_bigtab {
-    color: #09b441;
-    border-color: #09b441;
-    background: #dad240;
-    box-shadow
-Attaches one or more drop-shadows to the box. The property is a comma-separated list of shadows, each specified by 2-4 length values, an optional color, and an optional 'inset' keyword. Omitted lengths are 0; omitted colors are a user agent chosen color.
-
-Widely available across major browsers (Baseline since January 2018)
-Learn more
-
-Don’t show
-: var(--ss-box-shadow-1) !important;
-}
-.btn_toggleoff {
-    color: #000000 !important;
-    text-shadow
-Enables shadow effects to be applied to the text of the element.
-
-Widely available across major browsers (Baseline since January 2018)
-Learn more
-
-Don’t show
-: none !important;
-}
 
     /* Black outline around the candy cane and the egg count next to it. */
     img[src*="goldenegg" i], img[src*="eggcoin" i], img[src*="egg_coin" i],
@@ -530,7 +500,7 @@ Don’t show
 })();
 
 /* =====================================================================
-                               NULL
+   Christmas (SFC / StateFarm Client + skin hack detector), merged into the theme.
    ===================================================================== */
 (() => {
   "use strict";
@@ -542,7 +512,7 @@ Don’t show
   const SCAN_OTHER_PLAYERS = true;   // also flag chat messages / player names that look like SFC
   const CHECK_EVERY_MS = 2000;       // how often to re-scan
   const THRESHOLD = 3;               // evidence score needed to warn (strong signs are worth 3)
-  const BANNER_ID = "anticheat-warning-banner";
+  const BANNER_ID = "christmas-warning-banner";
 
   // Skin hack detection
   const SKIN_HACK_CHECK = true;      // turn the skin hack detector on/off
@@ -555,6 +525,16 @@ Don’t show
     try { return typeof f === "function" && /\[native code\]/.test(Function.prototype.toString.call(f)); }
     catch (e) { return true; }
   };
+
+  // The "skin hax" unlocker prints "[ShellShock Unlocker] ..." to the console. If this script loads first, we see it.
+  let skinLogSeen = false;
+  try {
+    const origLog = console.log;
+    console.log = function (...args) {
+      try { if (typeof args[0] === "string" && /\[ShellShock Unlocker\]/i.test(args[0])) skinLogSeen = true; } catch (e) {}
+      return origLog.apply(this, args);
+    };
+  } catch (e) {}
 
   // ---------- Banner ----------
   let box = null;
@@ -581,7 +561,7 @@ Don’t show
     return true;
   }
 
-
+  // ---------- 1. Is SFC running on this page? ----------
   function findEvidence() {
     let score = 0;
     const reasons = [];
@@ -616,7 +596,9 @@ Don’t show
     return { score, reasons };
   }
 
- 
+  // ---------- 1b. Is a skin hack / skin unlocker running on this page? ----------
+  // Strong signs lock the screen. Weak signs (patched network functions) only show a warning,
+  // because ad blockers and other userscripts can patch those too.
   const SKIN_TOKENS = ["skinhack", "skin-hack", "skin_hack", "skinchanger", "skin-changer", "skin_changer", "skinunlock", "skin-unlock", "skin_unlock", "unlockskins", "unlock-skins", "unlock_skins"];
   const SKIN_SELECTOR = SKIN_TOKENS.map((t) => `[id*="${t}" i],[class*="${t}" i]`).join(",");
   const SKIN_GLOBALS = ["skinHack", "skinHacks", "SkinHack", "skinChanger", "SkinChanger", "skinUnlocker", "SkinUnlocker", "skinUnlock", "unlockSkins", "unlockAllSkins"];
@@ -633,6 +615,30 @@ Don’t show
       if (g.length) add(3, "skin hack globals: " + g.join(", "));
     } catch (e) {}
     try { if (/skin\s*(hack|changer|unlock)/i.test(norm(document.title))) add(3, "page title mentions a skin hack"); } catch (e) {}
+
+    // Exact fingerprints of the "skin hax (All Skins & Weapons)" unlocker
+    try {
+      const ex = window.extern;
+      if (skinLogSeen) add(3, "unlocker console message seen");
+      if (ex && ex._isPatchedAllSkins) add(3, "extern._isPatchedAllSkins flag");
+      if (ex) {
+        const src = ["getItemsOfType", "isItemOwned", "selectItem"].map((n) => {
+          try { return typeof ex[n] === "function" ? Function.prototype.toString.call(ex[n]) : ""; } catch (e) { return ""; }
+        }).join("\n");
+        if (/unlockItem|getRarityScore|_isPatchedAllSkins/.test(src)) add(3, "extern item functions contain unlocker code");
+      }
+      const d = Object.getOwnPropertyDescriptor(window, "extern");
+      if (d && (d.get || d.set)) add(2, "window.extern replaced by a getter/setter trap");
+      if (ex && typeof ex.isItemOwned === "function") {
+        let r = false;
+        try { r = ex.isItemOwned({ id: -987654, name: "__christmas_probe__" }) === true; } catch (e) {}
+        if (r) add(2, "isItemOwned says yes to a fake item");
+      }
+      if (ex && Array.isArray(ex.items) && ex.items.length >= 20) {
+        const hit = ex.items.filter((i) => i && i.owned === true && i.is_owned === true && i.vipOnly === false && i.exclusive === false && i.unlock === "default").length;
+        if (hit >= ex.items.length * 0.8) add(3, "items carry the unlocker's owned/vipOnly/exclusive fields");
+      }
+    } catch (e) {}
 
     // Weak signs: network / JSON functions that skin unlockers replace to fake your inventory
     try {
@@ -651,8 +657,8 @@ Don’t show
   }
 
   // ---------- Lock screen (cannot be closed) ----------
-  const LOCK_ID = "anticheat-lock-screen";
-  const STORE_KEY = "anticheat_sfc_locked";
+  const LOCK_ID = "christmas-lock-screen";
+  const STORE_KEY = "christmas_sfc_locked";
   let locked = false;
 
   function buildLock(title, text) {
@@ -684,7 +690,7 @@ Don’t show
     if (locked) return true;
     if (!document.body) return false;
     locked = true;
-    if (reasons) console.warn("[Anti-Cheat] " + (kind === "skin" ? "skin hack" : "SFC") + " detected (score " + score + "):", reasons);
+    if (reasons) console.warn("[Christmas] " + (kind === "skin" ? "skin hack" : "SFC") + " detected (score " + score + "):", reasons);
     try { if (PERSIST_LOCK) localStorage.setItem(STORE_KEY, "1"); } catch (e) {}
 
     const mount = () => {
@@ -708,9 +714,9 @@ Don’t show
     if (SKIN_HACK_CHECK) {
       const skin = findSkinEvidence();
       if (skin.score >= SKIN_THRESHOLD) { lock(skin.reasons, skin.score, "skin"); return; }
-      if (skin.weak >= 2 && !skinWarned && warn(" Some game functions were modified. If you use a skin hack, turn it off.", "#c25b00", 12000)) {
+      if ((skin.weak >= 2 || skin.score >= 2) && !skinWarned && warn(" Some game functions were modified. If you use a skin hack, turn it off.", "#c25b00", 12000)) {
         skinWarned = true;
-        console.warn("[Anti-Cheat] possible skin hack tampering:", skin.reasons);
+        console.warn("[Christmas] possible skin hack tampering:", skin.reasons);
       }
     }
   }
