@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Christmas Theme by DST
 // @namespace    little bit help with claude :P
-// @version      V8
+// @version      V10
 // @description  Christmas theme for Shell Shockers, with the SFC and skin hack detector built in
 // @author       DST
 // @license      DST
@@ -87,10 +87,94 @@
 // @grant        none
 // ==/UserScript==
 
+/* =====================================================================
+   BUG FIXING LOG
+   Newest first. Add a new line here every time something is fixed or changed.
+
+   V10 - Added a runtime bug log (window.christmasLog). It records errors, warnings and detections while the
+         script runs, groups repeats, and shows them with christmasLog.show(). See "HOW TO READ THE LOG" below.
+   V9  - Added this log.
+   V8  - Renamed the old "Anti-Cheat" labels (console prefix, element IDs, saved-lock key) to "Christmas".
+   V7  - Skin hack detector: added exact fingerprints of the "skin hax (All Skins & Weapons)" unlocker
+         (_isPatchedAllSkins flag, unlocker code in extern functions, console message, item fields,
+         extern getter/setter trap, fake-item ownership test).
+   V6  - Added the skin hack detector (suspicious elements/globals/page title, replaced network functions,
+         chat and player name warnings). Weak signs only warn; strong signs lock the screen.
+   V5  - Merged the SFC anti-cheat into the theme as one file. Replaced the @match list with the larger
+         anti-cheat list (covers every site the theme had).
+   V4  - Item type tabs get a #ac0d0d border; --ss-yolk set to #5b0f0f8f; scrollbar is now green on dark red;
+         .btn_yolk border #ff0000 (background line left out); #ico-vip made dark red.
+   V3  - Background picture changed to the Main Street Christmas photo (embedded, 1440px wide, quality 66).
+         Selected/hovered weapon tile: green-to-black gradient with a #d42a3c border.
+   V2  - Full script rebuilt with the requested edits: text outline made transparent, .text_yellow #125d02,
+         inventory tiles changed from flat black to dark green glass, red selected/hover tile and red
+         tooltip bubble. Removed stray text that was pasted outside the script.
+   V1  - First version (Christmas theme built from the Blossom V4 structure).
+   ===================================================================== */
+
+/* =====================================================================
+   RUNTIME BUG LOG
+   HOW TO READ THE LOG (open the browser console with F12 on the game page):
+     christmasLog.show()   prints every entry as a table
+     christmasLog.copy()   copies the whole log as text so you can send it
+     christmasLog.clear()  empties the log
+   Warnings and errors also print live as "[Christmas] ...". Debug and info entries are only stored.
+   ===================================================================== */
+(() => {
+  "use strict";
+  const MAX = 300;
+  const entries = [];
+  const seen = new Map();
+  const stamp = () => new Date().toISOString().slice(11, 19);
+  const asText = (m) => {
+    if (m instanceof Error) return (m.stack ? m.stack.split("\n").slice(0, 3).join(" | ") : m.message);
+    if (typeof m === "string") return m;
+    try { return JSON.stringify(m); } catch (e) { return String(m); }
+  };
+  function add(level, source, msg) {
+    const body = asText(msg);
+    const key = level + "|" + source + "|" + body;
+    const n = (seen.get(key) || 0) + 1;
+    seen.set(key, n);
+    if (n > 1) { // same message again: just count it
+      const last = entries.find((e) => e.key === key);
+      if (last) { last.count = n; last.time = stamp(); }
+      return;
+    }
+    entries.push({ key, time: stamp(), level, source, msg: body, count: 1 });
+    if (entries.length > MAX) seen.delete(entries.shift().key);
+    if (level === "warn") console.warn("[Christmas] " + source + ": " + body);
+    else if (level === "error") console.error("[Christmas] " + source + ": " + body);
+  }
+  const api = {
+    entries,
+    debug: (src, msg) => add("debug", src, msg),
+    info: (src, msg) => add("info", src, msg),
+    warn: (src, msg) => add("warn", src, msg),
+    error: (src, msg) => add("error", src, msg),
+    // Runs a function and records any crash instead of letting it fail silently
+    guard(name, fn) { try { fn(); } catch (e) { add("error", name, e); } },
+    text() {
+      return entries.map((e) => e.time + " [" + e.level + "] " + e.source + (e.count > 1 ? " x" + e.count : "") + ": " + e.msg).join("\n");
+    },
+    show() {
+      console.table(entries.map((e) => ({ time: e.time, level: e.level, source: e.source, count: e.count, message: e.msg })));
+      return entries.length + " entries";
+    },
+    copy() {
+      const t = api.text();
+      try { navigator.clipboard.writeText(t); return "copied " + entries.length + " entries"; } catch (e) { return t; }
+    },
+    clear() { entries.length = 0; seen.clear(); return "cleared"; }
+  };
+  window.christmasLog = api;
+  api.info("log", "Christmas script started on " + location.hostname);
+})();
+
 /* Christmas theme: built from the Blossom V4 structure. No external images are used, so nothing can break:
    the backdrop is a Christmas street scene embedded in the script itself, plus light falling snow drawn with CSS gradients on the home screen. */
 
-(() => {
+christmasLog.guard("theme", () => {
   "use strict";
   if (document.getElementById("xmas-style")) return;
 
@@ -497,12 +581,22 @@
     const o = new MutationObserver(() => { if (watchTitle()) o.disconnect(); });
     o.observe(document, { childList: true, subtree: true });
   }
-})();
+
+  // Health check a few seconds after load: records a problem if the theme did not apply
+  setTimeout(() => {
+    try {
+      if (!document.getElementById("xmas-style")) christmasLog.error("theme", "style tag is missing after load");
+      else christmasLog.info("theme", "style tag present");
+      const art = getComputedStyle(document.documentElement).getPropertyValue("--xm-art");
+      if (!art || /PASTE_YOUR/.test(art)) christmasLog.error("theme", "background picture (--xm-art) is missing");
+    } catch (e) { christmasLog.error("theme", e); }
+  }, 4000);
+});
 
 /* =====================================================================
    Christmas (SFC / StateFarm Client + skin hack detector), merged into the theme.
    ===================================================================== */
-(() => {
+christmasLog.guard("detector", () => {
   "use strict";
 
   // ---------- Settings ----------
@@ -531,10 +625,10 @@
   try {
     const origLog = console.log;
     console.log = function (...args) {
-      try { if (typeof args[0] === "string" && /\[ShellShock Unlocker\]/i.test(args[0])) skinLogSeen = true; } catch (e) {}
+      try { if (typeof args[0] === "string" && /\[ShellShock Unlocker\]/i.test(args[0])) skinLogSeen = true; } catch (e) { christmasLog.debug("detector", e); }
       return origLog.apply(this, args);
     };
-  } catch (e) {}
+  } catch (e) { christmasLog.debug("detector", e); }
 
   // ---------- Banner ----------
   let box = null;
@@ -568,30 +662,30 @@
     const add = (pts, why) => { score += pts; reasons.push(why); };
 
     // Strong signs (taken from the SFC source)
-    try { if (document.querySelector(".tp-statefarm")) add(3, "elements with class tp-statefarm"); } catch (e) {}
-    try { if (typeof String.prototype.originalReplace === "function" || typeof String.prototype.originalReplaceAll === "function") add(3, "String.prototype.originalReplace patch"); } catch (e) {}
-    try { if (window.WASMOBJECT) add(3, "window.WASMOBJECT (WebAssembly hook)"); } catch (e) {}
-    try { if (window.globalSS) add(3, "window.globalSS (SFC debug object)"); } catch (e) {}
-    try { if (document.getElementById("sfChat-iframe") || document.querySelector('iframe[src*="StateFarmClient" i]')) add(3, "SFC chat iframe"); } catch (e) {}
-    try { if (document.getElementById("automated-border")) add(3, "SFC bot window border"); } catch (e) {}
-    try { if (/state\s*farm/i.test(norm(document.title))) add(3, "page title mentions StateFarm"); } catch (e) {}
-    try { if (document.querySelector('img[src*="StateFarmClient" i],img[src*="shell-logo-replacement" i],img[src*="sfc.best" i]')) add(3, "SFC logo / badge images"); } catch (e) {}
+    try { if (document.querySelector(".tp-statefarm")) add(3, "elements with class tp-statefarm"); } catch (e) { christmasLog.debug("detector", e); }
+    try { if (typeof String.prototype.originalReplace === "function" || typeof String.prototype.originalReplaceAll === "function") add(3, "String.prototype.originalReplace patch"); } catch (e) { christmasLog.debug("detector", e); }
+    try { if (window.WASMOBJECT) add(3, "window.WASMOBJECT (WebAssembly hook)"); } catch (e) { christmasLog.debug("detector", e); }
+    try { if (window.globalSS) add(3, "window.globalSS (SFC debug object)"); } catch (e) { christmasLog.debug("detector", e); }
+    try { if (document.getElementById("sfChat-iframe") || document.querySelector('iframe[src*="StateFarmClient" i]')) add(3, "SFC chat iframe"); } catch (e) { christmasLog.debug("detector", e); }
+    try { if (document.getElementById("automated-border")) add(3, "SFC bot window border"); } catch (e) { christmasLog.debug("detector", e); }
+    try { if (/state\s*farm/i.test(norm(document.title))) add(3, "page title mentions StateFarm"); } catch (e) { christmasLog.debug("detector", e); }
+    try { if (document.querySelector('img[src*="StateFarmClient" i],img[src*="shell-logo-replacement" i],img[src*="sfc.best" i]')) add(3, "SFC logo / badge images"); } catch (e) { christmasLog.debug("detector", e); }
 
     // Medium signs (need to add up with something else)
-    try { if (document.querySelector("#minimap.MiniMap") && document.querySelector(".playerDot")) add(2, "SFC minimap elements"); } catch (e) {}
+    try { if (document.querySelector("#minimap.MiniMap") && document.querySelector(".playerDot")) add(2, "SFC minimap elements"); } catch (e) { christmasLog.debug("detector", e); }
     try {
       const scrambled = Object.getOwnPropertyNames(window).filter((k) => {
         if (!/^[a-z]{10}$/.test(k)) return false;
         try { return typeof window[k] === "function"; } catch (e) { return false; }
       });
       if (scrambled.length >= 5) add(2, `${scrambled.length} random 10-letter global functions`);
-    } catch (e) {}
-    try { if (document.querySelector(".tp-rotv")) add(1, "Tweakpane menu present"); } catch (e) {}
+    } catch (e) { christmasLog.debug("detector", e); }
+    try { if (document.querySelector(".tp-rotv")) add(1, "Tweakpane menu present"); } catch (e) { christmasLog.debug("detector", e); }
     try {
       if (window.WebAssembly && !isNative(WebAssembly.instantiateStreaming)) add(1, "WebAssembly.instantiateStreaming replaced");
       if (!isNative(EventTarget.prototype.addEventListener)) add(1, "addEventListener replaced");
       if (!isNative(HTMLElement.prototype.appendChild)) add(1, "appendChild replaced");
-    } catch (e) {}
+    } catch (e) { christmasLog.debug("detector", e); }
 
     return { score, reasons };
   }
@@ -609,12 +703,12 @@
     const reasons = [];
     const add = (pts, why) => { score += pts; reasons.push(why); };
 
-    try { if (document.querySelector(SKIN_SELECTOR)) add(3, "skin hack elements in the page"); } catch (e) {}
+    try { if (document.querySelector(SKIN_SELECTOR)) add(3, "skin hack elements in the page"); } catch (e) { christmasLog.debug("detector", e); }
     try {
       const g = SKIN_GLOBALS.filter((n) => { try { return typeof window[n] !== "undefined"; } catch (e) { return false; } });
       if (g.length) add(3, "skin hack globals: " + g.join(", "));
-    } catch (e) {}
-    try { if (/skin\s*(hack|changer|unlock)/i.test(norm(document.title))) add(3, "page title mentions a skin hack"); } catch (e) {}
+    } catch (e) { christmasLog.debug("detector", e); }
+    try { if (/skin\s*(hack|changer|unlock)/i.test(norm(document.title))) add(3, "page title mentions a skin hack"); } catch (e) { christmasLog.debug("detector", e); }
 
     // Exact fingerprints of the "skin hax (All Skins & Weapons)" unlocker
     try {
@@ -631,14 +725,14 @@
       if (d && (d.get || d.set)) add(2, "window.extern replaced by a getter/setter trap");
       if (ex && typeof ex.isItemOwned === "function") {
         let r = false;
-        try { r = ex.isItemOwned({ id: -987654, name: "__christmas_probe__" }) === true; } catch (e) {}
+        try { r = ex.isItemOwned({ id: -987654, name: "__christmas_probe__" }) === true; } catch (e) { christmasLog.debug("detector", e); }
         if (r) add(2, "isItemOwned says yes to a fake item");
       }
       if (ex && Array.isArray(ex.items) && ex.items.length >= 20) {
         const hit = ex.items.filter((i) => i && i.owned === true && i.is_owned === true && i.vipOnly === false && i.exclusive === false && i.unlock === "default").length;
         if (hit >= ex.items.length * 0.8) add(3, "items carry the unlocker's owned/vipOnly/exclusive fields");
       }
-    } catch (e) {}
+    } catch (e) { christmasLog.debug("detector", e); }
 
     // Weak signs: network / JSON functions that skin unlockers replace to fake your inventory
     try {
@@ -651,7 +745,7 @@
       ].filter(([, f]) => !isNative(f)).map(([n]) => n);
       weak = patched.length;
       if (weak) reasons.push("replaced functions: " + patched.join(", "));
-    } catch (e) {}
+    } catch (e) { christmasLog.debug("detector", e); }
 
     return { score, weak, reasons };
   }
@@ -690,13 +784,13 @@
     if (locked) return true;
     if (!document.body) return false;
     locked = true;
-    if (reasons) console.warn("[Christmas] " + (kind === "skin" ? "skin hack" : "SFC") + " detected (score " + score + "):", reasons);
-    try { if (PERSIST_LOCK) localStorage.setItem(STORE_KEY, "1"); } catch (e) {}
+    if (reasons) christmasLog.warn("detector", (kind === "skin" ? "skin hack" : "SFC") + " detected (score " + score + "): " + reasons.join("; "));
+    try { if (PERSIST_LOCK) localStorage.setItem(STORE_KEY, "1"); } catch (e) { christmasLog.debug("detector", e); }
 
     const mount = () => {
       if (!document.getElementById(LOCK_ID) && document.body) document.body.appendChild(kind === "skin" ? buildLock(SKIN_LOCK_TITLE, SKIN_LOCK_TEXT) : buildLock());
       document.documentElement.style.overflow = "hidden";
-      try { document.exitPointerLock(); } catch (e) {}
+      try { document.exitPointerLock(); } catch (e) { christmasLog.debug("detector", e); }
     };
     mount();
     BLOCKED.forEach((t) => window.addEventListener(t, blockInput, { capture: true, passive: false }));
@@ -707,7 +801,7 @@
   function checkSelf() {
     if (locked) return;
     let remembered = false;
-    try { remembered = PERSIST_LOCK && localStorage.getItem(STORE_KEY) === "1"; } catch (e) {}
+    try { remembered = PERSIST_LOCK && localStorage.getItem(STORE_KEY) === "1"; } catch (e) { christmasLog.debug("detector", e); }
     if (remembered) { lock(); return; }
     const { score, reasons } = findEvidence();
     if (score >= THRESHOLD) { lock(reasons, score); return; }
@@ -716,7 +810,7 @@
       if (skin.score >= SKIN_THRESHOLD) { lock(skin.reasons, skin.score, "skin"); return; }
       if ((skin.weak >= 2 || skin.score >= 2) && !skinWarned && warn(" Some game functions were modified. If you use a skin hack, turn it off.", "#c25b00", 12000)) {
         skinWarned = true;
-        console.warn("[Christmas] possible skin hack tampering:", skin.reasons);
+        christmasLog.warn("detector", "possible skin hack tampering: " + skin.reasons.join("; "));
       }
     }
   }
@@ -729,7 +823,7 @@
   const flagged = new Set();
   function flag(key, text) {
     if (flagged.has(key)) return;
-    if (warn(text, "#c25b00", 12000)) flagged.add(key);
+    if (warn(text, "#c25b00", 12000)) { flagged.add(key); christmasLog.info("players", text.trim()); }
   }
   function checkOthers() {
     try {
@@ -763,7 +857,7 @@
           flag("name:" + name, ` Player "${name}" has an SFC-style name. Looks like StateFarm Client: use off hacks!`);
         }
       });
-    } catch (e) {}
+    } catch (e) { christmasLog.debug("detector", e); }
   }
 
   // ---------- Run ----------
@@ -779,4 +873,4 @@
     timer = setTimeout(scan, 300);
   }).observe(document.documentElement, { childList: true, subtree: true });
   document.documentElement ? startObserver() : document.addEventListener("DOMContentLoaded", startObserver, { once: true });
-})();
+});
