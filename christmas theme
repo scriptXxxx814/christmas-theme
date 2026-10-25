@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Christmas Theme by DST
-// @namespace    little bit help with claude :P
-// @version      V10
-// @description  Christmas theme for Shell Shockers, with the SFC and skin hack detector built in
+// @namespace    
+// @version      V1
+// @description  Christmas theme for Shell Shockers
 // @author       DST
 // @license      DST
 // @icon         data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20x='2'%20y='2'%20width='60'%20height='60'%20rx='14'%20fill='%230b3d20'%20stroke='%23e03a3e'%20stroke-width='3'/%3E%3Cpath%20d='M32%2010L16%2030h8L14%2044h14v8h8v-8h14L40%2030h8z'%20fill='%231f9a4f'%20stroke='%23ffd86b'%20stroke-width='2'%20stroke-linejoin='round'/%3E%3C/svg%3E
@@ -91,6 +91,12 @@
    BUG FIXING LOG
    Newest first. Add a new line here every time something is fixed or changed.
 
+   V14 - Black 1.5px outline added around the green grenade/ammo icons.
+   V13 - Green grenade/ammo icons made darker (brightness .95 to .6).
+   V12 - Green icons: the HUD grenade/ammo icons are CSS backgrounds, so the first fix did not touch them.
+         The script now reads the game's stylesheet, finds the selectors that use ico_grenade/ico_ammo and
+         recolours those (christmasLog.show() lists the selectors it found).
+   V11 - Grenade and ammo icons (ico_grenade.webp, ico_ammo.webp) recoloured green.
    V10 - Added a runtime bug log (window.christmasLog). It records errors, warnings and detections while the
          script runs, groups repeats, and shows them with christmasLog.show(). See "HOW TO READ THE LOG" below.
    V9  - Added this log.
@@ -188,7 +194,7 @@ christmasLog.guard("theme", () => {
       --xm-red-dark: #7a1020;
       --xm-green: #1f7a3f;
       --xm-green-dark: #0b3d20;
-      --xm-gold: #ffd86b;
+      --xm-gold: #ffb505;
       --xm-gold-light: #fff0b8;
       --xm-snow: #f5fbff;
       --xm-ink: #4a0d18;
@@ -557,6 +563,27 @@ christmasLog.guard("theme", () => {
       color: #fff !important;
     }
     .tool-tip--bubble::after { border-right-color: var(--xm-red-dark) !important; border-top-color: var(--xm-red-dark) !important; }
+
+    /* Grenade and ammo icons (img/ico_grenade.webp, img/ico_ammo.webp) recoloured green, keeping their shading */
+    img[src*="ico_grenade" i], [style*="ico_grenade" i],
+    img[src*="ico_ammo" i], [style*="ico_ammo" i] {
+      filter: grayscale(1) sepia(1) saturate(5) hue-rotate(65deg) brightness(.6) contrast(1.15) drop-shadow(1.5px 0 0 #000) drop-shadow(-1.5px 0 0 #000) drop-shadow(0 1.5px 0 #000) drop-shadow(0 -1.5px 0 #000);
+    }
+.playerSlot--score
+Specificity: (0,1,0)
+ {
+    color: #00ff1287;
+}
+.text_yellow_bright {
+    color: #1fae52;
+}
+.chat {
+    color: #ff0000;
+    opacity: .7;
+}
+.main-menu-button.current-screen, .main-menu-button:hover {
+    color: #ff0000;
+}
   `;
 
   // Same mounting approach as Blossom V4: start on <html> so the loading screen is themed immediately,
@@ -581,6 +608,53 @@ christmasLog.guard("theme", () => {
     const o = new MutationObserver(() => { if (watchTitle()) o.disconnect(); });
     o.observe(document, { childList: true, subtree: true });
   }
+
+  // ---------- Green grenade + ammo icons, found from the game's own stylesheet ----------
+  // The HUD draws these icons as CSS backgrounds, so they cannot be matched by an <img> rule.
+  // This reads the game's CSS, finds which selectors use ico_grenade / ico_ammo and recolours exactly those.
+  const ICON_FILES = ["ico_grenade", "ico_ammo"];
+  const ICON_GREEN = "grayscale(1) sepia(1) saturate(5) hue-rotate(65deg) brightness(.6) contrast(1.15) drop-shadow(1.5px 0 0 #000) drop-shadow(-1.5px 0 0 #000) drop-shadow(0 1.5px 0 #000) drop-shadow(0 -1.5px 0 #000)";
+  const iconSeen = new Set();
+  let iconStyle = null;
+  const collectIcons = (rules, found) => {
+    for (const r of rules) {
+      try {
+        if (r.cssRules && !r.selectorText) { collectIcons(r.cssRules, found); continue; } // @media / @supports
+        if (!r.selectorText || !r.style) continue;
+        const css = r.cssText;
+        for (const f of ICON_FILES) {
+          if (css.includes(f)) { found.push([f, r.selectorText]); }
+        }
+      } catch (e) {}
+    }
+  };
+  const applyIcons = () => christmasLog.guard("icons", () => {
+    const found = [];
+    let blocked = 0;
+    for (const sheet of document.styleSheets) {
+      if (sheet.ownerNode && sheet.ownerNode.id === "xmas-style") continue;
+      if (sheet.ownerNode && sheet.ownerNode.id === "xmas-icons") continue;
+      try { collectIcons(sheet.cssRules, found); } catch (e) { blocked++; }
+    }
+    if (blocked) christmasLog.debug("icons", blocked + " stylesheet(s) could not be read (cross-origin)");
+    const fresh = found.filter(([f, sel]) => !iconSeen.has(f + "|" + sel));
+    if (!fresh.length) return;
+    fresh.forEach(([f, sel]) => { iconSeen.add(f + "|" + sel); christmasLog.info("icons", f + " is used by: " + sel); });
+    if (!iconStyle) {
+      iconStyle = document.createElement("style");
+      iconStyle.id = "xmas-icons";
+      (document.body || document.documentElement).appendChild(iconStyle);
+    }
+    const sels = [...new Set([...iconSeen].map((k) => k.split("|").slice(1).join("|")))];
+    iconStyle.textContent = sels.join(",\n") + " { filter: " + ICON_GREEN + " !important; }";
+  });
+  [0, 1500, 4000, 8000].forEach((ms) => setTimeout(applyIcons, ms));
+  window.addEventListener("load", applyIcons, { once: true });
+  setTimeout(() => {
+    ICON_FILES.forEach((f) => {
+      if (![...iconSeen].some((k) => k.startsWith(f + "|"))) christmasLog.warn("icons", "no stylesheet rule uses " + f + " (it may be an <img> or set by script)");
+    });
+  }, 9000);
 
   // Health check a few seconds after load: records a problem if the theme did not apply
   setTimeout(() => {
