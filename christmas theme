@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Christmas Theme by DST
-// @namespace    
-// @version      V1
-// @description  Christmas theme for Shell Shockers
+// @namespace    little bit help with claude :P
+// @version      V14
+// @description  Christmas theme for Shell Shockers, with the SFC and skin hack detector built in
 // @author       DST
 // @license      DST
 // @icon         data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20x='2'%20y='2'%20width='60'%20height='60'%20rx='14'%20fill='%230b3d20'%20stroke='%23e03a3e'%20stroke-width='3'/%3E%3Cpath%20d='M32%2010L16%2030h8L14%2044h14v8h8v-8h14L40%2030h8z'%20fill='%231f9a4f'%20stroke='%23ffd86b'%20stroke-width='2'%20stroke-linejoin='round'/%3E%3C/svg%3E
