@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Christmas Theme by DST
-// @namespace    dst
-// @version      V1
-// @description  Christmas theme for Shell Shockers
+// @namespace    little bit help with claude :P
+// @version      V15
+// @description  Christmas theme for Shell Shockers, with the SFC detector built in
 // @author       DST
 // @license      DST
 // @icon         data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20x='2'%20y='2'%20width='60'%20height='60'%20rx='14'%20fill='%230b3d20'%20stroke='%23e03a3e'%20stroke-width='3'/%3E%3Cpath%20d='M32%2010L16%2030h8L14%2044h14v8h8v-8h14L40%2030h8z'%20fill='%231f9a4f'%20stroke='%23ffd86b'%20stroke-width='2'%20stroke-linejoin='round'/%3E%3C/svg%3E
@@ -423,14 +423,73 @@ christmasLog.guard("theme", () => {
     /* ---------- In-game HUD ---------- */
     #inGameUI { background-color: transparent; border-color: var(--xm-gold); }
     #inGameUI .title { color: var(--xm-gold); }
-    .crosshair { border: solid .05em #1fae52; opacity: 1; }
-    .crosshair.normal { background: #e0243a; opacity: 1; }
-    #reticleDot { background: #e0243a; border-color: #1fae52; }
-    /* Health: green ring, red yolk, white number so it reads on both. */
-    #healthContainer { background: #1fae52; opacity: .75; --ss-white: #fff; }
+.crosshair { border: solid .05em #000 !important; background: #000 !important; opacity: 1; }
+.crosshair.normal { background: #e0243a !important; outline: 1px solid #000; opacity: 1; }
+#reticleDot {
+  background: transparent !important;
+  border-color: transparent !important;
+  width: 6px !important;
+  height: 6px !important;
+  position: relative !important;
+}
+#reticleDot {
+  background: transparent !important;
+  border-color: transparent !important;
+  width: 16px !important;
+  height: 16px !important;
+  position: relative !important;
+}
+
+#reticleDot::before,
+#reticleDot::after {
+  content: '';
+  position: absolute;
+  background: #000 !important;
+  box-shadow: 0 0 0 1px #000;
+}
+
+#reticleDot::before {
+  width: 3px;
+  height: 100%;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+}
+
+#reticleDot::after {
+  width: 100%;
+  height: 3px;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+/* Health: green ring, red yolk, white number so it reads on both. */
+@keyframes rainbowBg {
+  0%   { background: #ff0000; }
+  16%  { background: #ff8000; }
+  33%  { background: #ffff00; }
+  50%  { background: #00cc00; }
+  66%  { background: #0000ff; }
+  83%  { background: #8b00ff; }
+  100% { background: #ff0000; }
+}
+
+#healthContainer {
+  animation: rainbowBg 3s linear infinite;
+  opacity: .75;
+  --ss-white: #fff;
+  box-shadow: 0 0 0 3px #000;
+}
+
+#reticleDot::before,
+#reticleDot::after {
+  background: #fff;
+  box-shadow: 0 0 0 1px #000;
+}
     #healthContainer :is(span, div, p, h1, h2, h3) { color: #fff; }
     #healthContainer text { fill: #fff; }
-    .healthYolk { fill: #e0243a; }
+    .healthYolk { fill: #000000; }
     .healthBar-hardBoiled { stroke: #1fae52; }
     #bigMessageCaption { color: var(--xm-gold); }
     .egg-breaker-icon { fill: var(--xm-gold); }
