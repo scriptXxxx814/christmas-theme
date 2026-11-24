@@ -9,5 +9,6 @@ any questions just dms are open dst_gamer_ttv
 (#change log#)
 
 IN THE DISCORD :)
-    
+    "^"
+     |
 
