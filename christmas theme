@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Christmas Theme by DST
 // @namespace    little bit help with claude :P
-// @version      V14
-// @description  Christmas theme for Shell Shockers, with the SFC and skin hack detector built in
+// @version      V15
+// @description  Christmas theme for Shell Shockers, with the SFC detector built in
 // @author       DST
 // @license      DST
 // @icon         data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20x='2'%20y='2'%20width='60'%20height='60'%20rx='14'%20fill='%230b3d20'%20stroke='%23e03a3e'%20stroke-width='3'/%3E%3Cpath%20d='M32%2010L16%2030h8L14%2044h14v8h8v-8h14L40%2030h8z'%20fill='%231f9a4f'%20stroke='%23ffd86b'%20stroke-width='2'%20stroke-linejoin='round'/%3E%3C/svg%3E
@@ -91,6 +91,8 @@
    BUG FIXING LOG
    Newest first. Add a new line here every time something is fixed or changed.
 
+   V15 - Removed the skin hack detector (settings, console hook, scans, lock text, chat/name checks). The SFC
+         detector is unchanged. Premium item banner background changed to #87ec4a.
    V14 - Black 1.5px outline added around the green grenade/ammo icons.
    V13 - Green grenade/ammo icons made darker (brightness .95 to .6).
    V12 - Green icons: the HUD grenade/ammo icons are CSS backgrounds, so the first fix did not touch them.
@@ -194,7 +196,7 @@ christmasLog.guard("theme", () => {
       --xm-red-dark: #7a1020;
       --xm-green: #1f7a3f;
       --xm-green-dark: #0b3d20;
-      --xm-gold: #ffb505;
+      --xm-gold: #ffd86b;
       --xm-gold-light: #fff0b8;
       --xm-snow: #f5fbff;
       --xm-ink: #4a0d18;
@@ -249,24 +251,6 @@ christmasLog.guard("theme", () => {
       --bundle-color: #000000;
       --bundle-text-color: #9aca10;
     }
-
-    /* ---------- Home screen (with falling snow) ---------- */
-    .load_screen {
-      background-image:
-        radial-gradient(circle, #fff 0 1.6px, transparent 2.2px),
-        radial-gradient(circle, rgb(255 255 255 / .75) 0 1px, transparent 1.7px),
-        var(--xm-art);
-      background-size: 120px 120px, 80px 80px, cover;
-      background-repeat: repeat, repeat, no-repeat;
-      background-position: 0 0, 40px 60px, 50% 50%;
-      animation: xm-snow 12s linear infinite;
-    }
-    @keyframes xm-snow {
-      from { background-position: 0 0, 40px 60px, 50% 50%; }
-      to { background-position: 0 120px, 40px 140px, 50% 50%; }
-    }
-    @media (prefers-reduced-motion: reduce) { .load_screen { animation: none; } }
-
     .main-menu-button:hover .main-nav-item-bg, .current-screen .main-nav-item-bg { fill: #ffffff00; stroke: #09b441; color: #09b441; }
     .main-menu-button.current-screen, .main-menu-button:hover { color: #fff; }
     .main-menu-button.current-screen .menu-icon, .main-menu-button:hover .menu-icon { fill: #fff; }
@@ -328,7 +312,9 @@ christmasLog.guard("theme", () => {
       box-shadow: var(--ss-btn-dark-shadow), var(--ss-btn-dark-bevel) #3f0202b3, var(--ss-btn-light-bevel) #000000b5;
     }
     /* Scrollbars: green thumb on a dark red track. */
-    * { scrollbar-color: #27c907 #4c0b03; }
+    * {
+    scrollbar-color: #000000 #4c0b03;
+}
     /* Text outline is now transparent (set to #000 to bring the black outline back). */
     html:root, body { -webkit-text-stroke: .06em #00000000; paint-order: stroke fill; }
 
@@ -513,7 +499,10 @@ christmasLog.guard("theme", () => {
     }
     .shadow_blue4 { text-shadow: var(--ss-space-xs) var(--ss-space-xs) #000000; }
     .text_blue1, .text_blue8 { color: #890404 !important; }
-    .btn_blue { background-color: #227803; border-color: #09b441; }
+   .btn_blue {
+    background-color: #09bd26d6;
+    border-color: #f0ff03;
+}
     .ss_field, .firebaseui-input {
       background: var(--xm-field) !important;
       color: #09b441 !important;
@@ -532,14 +521,39 @@ christmasLog.guard("theme", () => {
     .bevel_yolk { box-shadow: var(--ss-box-shadow-1), var(--ss-btn-dark-bevel) var(--xm-gold), var(--ss-btn-light-bevel) #000000; }
     .ss_button { color: #8c1f0e; }
     .btn-respawn.bevel_green { box-shadow: .15em .15em 0 rgb(0 0 0 / .3), var(--ss-btn-dark-bevel) #1fae5200, var(--ss-btn-light-bevel) #511e1e00; }
-    .text_yellow { color: #125d02; }
+    .text_yellow {
+  color: rgb(255, 0, 0);
+  animation: rainbow 2s linear infinite;
+}
+
+@keyframes rainbow {
+  0%   { color: rgb(255, 0, 0); }
+  16%  { color: rgb(255, 165, 0); }
+  33%  { color: rgb(255, 255, 0); }
+  50%  { color: rgb(0, 255, 0); }
+  66%  { color: rgb(0, 0, 255); }
+  83%  { color: rgb(148, 0, 211); }
+  100% { color: rgb(255, 0, 0); }
+}
     .single-egg-store-item.single-egg-store-item-is-bundle { background-image: linear-gradient(#000000, #09b441); }
     #equip_grid .grid-item.is-premium {
       background: #8f8e43;
       background: linear-gradient(to right bottom, #a900ff, #8315d6, #b93de9, #8b04f1, #6d44e0, #7035b0, #7240cd, #3b19c4, #146fb4, #0f56a5, #0a6296, #048726);
     }
-    .is-premium .equip-item-banner { color: #000000; background: #ec4ad8; }
+.is-premium .equip-item-banner {
+  color: #000000;
+  animation: bgRainbow 2s linear infinite;
+}
 
+@keyframes bgRainbow {
+  0%   { background: rgb(255, 0, 0); }
+  16%  { background: rgb(255, 165, 0); }
+  33%  { background: rgb(255, 255, 0); }
+  50%  { background: rgb(0, 255, 0); }
+  66%  { background: rgb(0, 0, 255); }
+  83%  { background: rgb(148, 0, 211); }
+  100% { background: rgb(255, 0, 0); }
+}
     /* Item type tabs and VIP icon */
     #equip_itemtype .selected, .ico_itemtype.selected, .ico_itemtype:hover { border-color: #ac0d0d; }
     #ico-vip, #ico-vip * { fill: #7a0a0a !important; color: #7a0a0a; }
@@ -569,20 +583,19 @@ christmasLog.guard("theme", () => {
     img[src*="ico_ammo" i], [style*="ico_ammo" i] {
       filter: grayscale(1) sepia(1) saturate(5) hue-rotate(65deg) brightness(.6) contrast(1.15) drop-shadow(1.5px 0 0 #000) drop-shadow(-1.5px 0 0 #000) drop-shadow(0 1.5px 0 #000) drop-shadow(0 -1.5px 0 #000);
     }
-.playerSlot--score
-Specificity: (0,1,0)
- {
-    color: #00ff1287;
+    .egg-color-select {
+    background: var(--ss-lightbackground);
+    padding: var(--ss-space-md);
+    margin-bottom: calc(var(--ss-space-lg) * 2);
+    margin-top: var(--ss-space-lg);
+    border: .2em solid #c0ab00;
+    width: 30em;
 }
-.text_yellow_bright {
-    color: #1fae52;
+#progress-outer > div {
+  background: #B8A000 !important;
 }
-.chat {
-    color: #ff0000;
-    opacity: .7;
-}
-.main-menu-button.current-screen, .main-menu-button:hover {
-    color: #ff0000;
+#progress-outer {
+  background: black !important;
 }
   `;
 
@@ -668,7 +681,7 @@ Specificity: (0,1,0)
 });
 
 /* =====================================================================
-   Christmas (SFC / StateFarm Client + skin hack detector), merged into the theme.
+   Christmas (SFC / StateFarm Client detector), merged into the theme.
    ===================================================================== */
 christmasLog.guard("detector", () => {
   "use strict";
@@ -682,27 +695,11 @@ christmasLog.guard("detector", () => {
   const THRESHOLD = 3;               // evidence score needed to warn (strong signs are worth 3)
   const BANNER_ID = "christmas-warning-banner";
 
-  // Skin hack detection
-  const SKIN_HACK_CHECK = true;      // turn the skin hack detector on/off
-  const SKIN_THRESHOLD = 3;          // strong evidence needed to lock the screen
-  const SKIN_LOCK_TITLE = " You are banned for using skin hacks";
-  const SKIN_LOCK_TEXT = "A skin hack / skin unlocker was detected. Turn off your hacks, remove the script and reload the page.";
-
   const norm = (s) => String(s || "").normalize("NFKD").replace(/[\u0405\u0455]/g, "s"); // SFC uses a Cyrillic "Ѕ"
   const isNative = (f) => {
     try { return typeof f === "function" && /\[native code\]/.test(Function.prototype.toString.call(f)); }
     catch (e) { return true; }
   };
-
-  // The "skin hax" unlocker prints "[ShellShock Unlocker] ..." to the console. If this script loads first, we see it.
-  let skinLogSeen = false;
-  try {
-    const origLog = console.log;
-    console.log = function (...args) {
-      try { if (typeof args[0] === "string" && /\[ShellShock Unlocker\]/i.test(args[0])) skinLogSeen = true; } catch (e) { christmasLog.debug("detector", e); }
-      return origLog.apply(this, args);
-    };
-  } catch (e) { christmasLog.debug("detector", e); }
 
   // ---------- Banner ----------
   let box = null;
@@ -764,66 +761,6 @@ christmasLog.guard("detector", () => {
     return { score, reasons };
   }
 
-  // ---------- 1b. Is a skin hack / skin unlocker running on this page? ----------
-  // Strong signs lock the screen. Weak signs (patched network functions) only show a warning,
-  // because ad blockers and other userscripts can patch those too.
-  const SKIN_TOKENS = ["skinhack", "skin-hack", "skin_hack", "skinchanger", "skin-changer", "skin_changer", "skinunlock", "skin-unlock", "skin_unlock", "unlockskins", "unlock-skins", "unlock_skins"];
-  const SKIN_SELECTOR = SKIN_TOKENS.map((t) => `[id*="${t}" i],[class*="${t}" i]`).join(",");
-  const SKIN_GLOBALS = ["skinHack", "skinHacks", "SkinHack", "skinChanger", "SkinChanger", "skinUnlocker", "SkinUnlocker", "skinUnlock", "unlockSkins", "unlockAllSkins"];
-  let skinWarned = false;
-
-  function findSkinEvidence() {
-    let score = 0, weak = 0;
-    const reasons = [];
-    const add = (pts, why) => { score += pts; reasons.push(why); };
-
-    try { if (document.querySelector(SKIN_SELECTOR)) add(3, "skin hack elements in the page"); } catch (e) { christmasLog.debug("detector", e); }
-    try {
-      const g = SKIN_GLOBALS.filter((n) => { try { return typeof window[n] !== "undefined"; } catch (e) { return false; } });
-      if (g.length) add(3, "skin hack globals: " + g.join(", "));
-    } catch (e) { christmasLog.debug("detector", e); }
-    try { if (/skin\s*(hack|changer|unlock)/i.test(norm(document.title))) add(3, "page title mentions a skin hack"); } catch (e) { christmasLog.debug("detector", e); }
-
-    // Exact fingerprints of the "skin hax (All Skins & Weapons)" unlocker
-    try {
-      const ex = window.extern;
-      if (skinLogSeen) add(3, "unlocker console message seen");
-      if (ex && ex._isPatchedAllSkins) add(3, "extern._isPatchedAllSkins flag");
-      if (ex) {
-        const src = ["getItemsOfType", "isItemOwned", "selectItem"].map((n) => {
-          try { return typeof ex[n] === "function" ? Function.prototype.toString.call(ex[n]) : ""; } catch (e) { return ""; }
-        }).join("\n");
-        if (/unlockItem|getRarityScore|_isPatchedAllSkins/.test(src)) add(3, "extern item functions contain unlocker code");
-      }
-      const d = Object.getOwnPropertyDescriptor(window, "extern");
-      if (d && (d.get || d.set)) add(2, "window.extern replaced by a getter/setter trap");
-      if (ex && typeof ex.isItemOwned === "function") {
-        let r = false;
-        try { r = ex.isItemOwned({ id: -987654, name: "__christmas_probe__" }) === true; } catch (e) { christmasLog.debug("detector", e); }
-        if (r) add(2, "isItemOwned says yes to a fake item");
-      }
-      if (ex && Array.isArray(ex.items) && ex.items.length >= 20) {
-        const hit = ex.items.filter((i) => i && i.owned === true && i.is_owned === true && i.vipOnly === false && i.exclusive === false && i.unlock === "default").length;
-        if (hit >= ex.items.length * 0.8) add(3, "items carry the unlocker's owned/vipOnly/exclusive fields");
-      }
-    } catch (e) { christmasLog.debug("detector", e); }
-
-    // Weak signs: network / JSON functions that skin unlockers replace to fake your inventory
-    try {
-      const patched = [
-        ["fetch", window.fetch],
-        ["XMLHttpRequest.open", XMLHttpRequest.prototype.open],
-        ["XMLHttpRequest.send", XMLHttpRequest.prototype.send],
-        ["JSON.parse", JSON.parse],
-        ["Response.json", Response.prototype.json]
-      ].filter(([, f]) => !isNative(f)).map(([n]) => n);
-      weak = patched.length;
-      if (weak) reasons.push("replaced functions: " + patched.join(", "));
-    } catch (e) { christmasLog.debug("detector", e); }
-
-    return { score, weak, reasons };
-  }
-
   // ---------- Lock screen (cannot be closed) ----------
   const LOCK_ID = "christmas-lock-screen";
   const STORE_KEY = "christmas_sfc_locked";
@@ -854,15 +791,15 @@ christmasLog.guard("detector", () => {
     e.preventDefault();
   }
 
-  function lock(reasons, score, kind) {
+  function lock(reasons, score) {
     if (locked) return true;
     if (!document.body) return false;
     locked = true;
-    if (reasons) christmasLog.warn("detector", (kind === "skin" ? "skin hack" : "SFC") + " detected (score " + score + "): " + reasons.join("; "));
+    if (reasons) christmasLog.warn("detector", "SFC detected (score " + score + "): " + reasons.join("; "));
     try { if (PERSIST_LOCK) localStorage.setItem(STORE_KEY, "1"); } catch (e) { christmasLog.debug("detector", e); }
 
     const mount = () => {
-      if (!document.getElementById(LOCK_ID) && document.body) document.body.appendChild(kind === "skin" ? buildLock(SKIN_LOCK_TITLE, SKIN_LOCK_TEXT) : buildLock());
+      if (!document.getElementById(LOCK_ID) && document.body) document.body.appendChild(buildLock());
       document.documentElement.style.overflow = "hidden";
       try { document.exitPointerLock(); } catch (e) { christmasLog.debug("detector", e); }
     };
@@ -879,21 +816,11 @@ christmasLog.guard("detector", () => {
     if (remembered) { lock(); return; }
     const { score, reasons } = findEvidence();
     if (score >= THRESHOLD) { lock(reasons, score); return; }
-    if (SKIN_HACK_CHECK) {
-      const skin = findSkinEvidence();
-      if (skin.score >= SKIN_THRESHOLD) { lock(skin.reasons, skin.score, "skin"); return; }
-      if ((skin.weak >= 2 || skin.score >= 2) && !skinWarned && warn(" Some game functions were modified. If you use a skin hack, turn it off.", "#c25b00", 12000)) {
-        skinWarned = true;
-        christmasLog.warn("detector", "possible skin hack tampering: " + skin.reasons.join("; "));
-      }
-    }
   }
 
   // ---------- 2. Do other players look like they use SFC? ----------
   const SIGNATURE = /state\s*farm|dsc\.gg\/sfnetwork|\[sfc\]|\bsfc\b/i;
-  const SKIN_SIGNATURE = /skin\s*(hacks?|unlock(?:er)?|changer|spoof(?:er)?)|unlock\s*all\s*(skins|items|knives)|free\s*skins?/i;
   const doneChat = new WeakSet();
-  const doneSkinChat = new WeakSet();
   const flagged = new Set();
   function flag(key, text) {
     if (flagged.has(key)) return;
@@ -909,22 +836,6 @@ christmasLog.guard("detector", () => {
           flag("chat:" + name, ` ${name} sent an SFC message. Looks like StateFarm Client: use off hacks!`);
         }
       });
-      if (SKIN_HACK_CHECK) {
-        document.querySelectorAll("#chatOut .chat-item").forEach((el) => {
-          if (doneSkinChat.has(el)) return;
-          doneSkinChat.add(el);
-          if (SKIN_SIGNATURE.test(norm(el.textContent))) {
-            const name = (el.querySelector(".chat-player-name")?.textContent || "A player").trim();
-            flag("skinchat:" + name, ` ${name} is talking about skin hacks. Skin hacks are cheating: turn them off!`);
-          }
-        });
-        document.querySelectorAll("#playerList .playerSlot--name").forEach((el) => {
-          const name = el.textContent.trim();
-          if (name && SKIN_SIGNATURE.test(norm(name))) {
-            flag("skinname:" + name, ` Player "${name}" has a skin hack style name. Skin hacks are cheating!`);
-          }
-        });
-      }
       document.querySelectorAll("#playerList .playerSlot--name").forEach((el) => {
         const name = el.textContent.trim();
         if (name && SIGNATURE.test(norm(name))) {
