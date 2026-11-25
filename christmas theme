@@ -202,7 +202,7 @@ christmasLog.guard("theme", () => {
       --xm-ink: #4a0d18;
       --xm-field: #14281c;
       --ss-yolk0: #ff6060;
-      --ss-yolk: #5b0f0f8f;
+      --ss-yolk: #000000;
       --ss-yolk2: var(--xm-gold);
       --ss-brown: #fff;
       --ss-blue00: #000;
@@ -308,8 +308,9 @@ christmasLog.guard("theme", () => {
     .player-challenge-single-action-claimed {
       background: #000000; width: 35%; padding: .2em 0 .2em 1em; position: absolute; bottom: 0; right: 0; transform-origin: bottom left;
     }
-    #vipEnded .bevel_red, .btn-dark-bevel.bevel_red {
-      box-shadow: var(--ss-btn-dark-shadow), var(--ss-btn-dark-bevel) #3f0202b3, var(--ss-btn-light-bevel) #000000b5;
+    #vipEnded .bevel_red, .btn-dark-bevel.bevel_blue {
+    box-shadow: var(--ss-btn-dark-shadow), var(--ss-btn-dark-bevel) #1fae52, var(--ss-btn-light-bevel) #1fae52;
+}
     }
     /* Scrollbars: green thumb on a dark red track. */
     * {
@@ -656,6 +657,37 @@ christmasLog.guard("theme", () => {
 #progress-outer {
   background: black !important;
 }
+.redTeam {
+    color: #000000 !important;
+}
+h4.blueTeam.btn_blue {
+  display: none !important;
+}
+h4.redTeam.btn_red {
+  display: none !important;
+}
+.playerSlot-player-is-me.playerSlot-me-blue {
+    background: rgb(0 0 0 / 0%);
+    color: rgb(0 0 0);
+}
+.playerSlot-player-is-me.playerSlot-me-red {
+    background: rgb(0 0 0);
+    color: var(--ss-team-red-dark);
+}
+.bg_yellow {
+    background-color: #e0243a !important;
+}
+.main-menu-button.current-screen, .main-menu-button:hover {
+    color: #ff0000;
+}
+.teamScore.red i {
+    color: rgb(255 246 0);
+}
+.teamScore.blue i {
+    color: #1fae52;
+}
+
+
   `;
 
   // Same mounting approach as Blossom V4: start on <html> so the loading screen is themed immediately,
